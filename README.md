@@ -12,8 +12,26 @@ Usage
 bin/console doctrine-generator:entity "App\Domain\MyDomainEntity"
 ```
 
-Example
--------
+Conventions
+-----------
+
+The primary key of the doctrine entity must be the "id" property of domain entity. If there are not an "id" property in 
+the domain entity, the doctrine entity will not have primary key.
+
+```php
+class MyDomainEntity {
+    private string $id; // Will be the doctrine primary key
+}
+
+class DoctrineMyDomainEntity {
+    #[ORM\Column(type: 'string')]
+    #[ORM\Id]
+    public string $id;
+}
+```
+
+Complete Example
+----------------
 
 Given MyDomainEntity with some value objects:
 
