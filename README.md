@@ -1,7 +1,9 @@
 Doctrine Entity Generator
 =========================
-This bundle provides a console command to generate doctrine entities with mapping attributes and a mapper class from
-domain entity class.
+This Symfony bundle provides a console command to generate doctrine entities with mapping attributes and a mapper class
+from domain entity class.
+
+Then you can use domain entities in your domain and application layers and map it to doctrine entities for persistence.
 
 Usage
 -----
