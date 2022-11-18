@@ -206,7 +206,7 @@ Applications that use Symfony Flex
 Open a command console, enter your project directory and execute:
 
 ```console
-$ composer require brokalia/doctrine-entity-generator
+$ composer require --dev brokalia/doctrine-entity-generator
 ```
 
 Applications that don't use Symfony Flex
@@ -218,7 +218,7 @@ Open a command console, enter your project directory and execute the
 following command to download the latest stable version of this bundle:
 
 ```console
-$ composer require brokalia/doctrine-entity-generator
+$ composer require --dev brokalia/doctrine-entity-generator
 ```
 
 ### Step 2: Enable the Bundle
@@ -231,6 +231,6 @@ in the `config/bundles.php` file of your project:
 
 return [
     // ...
-    Brokalia\DoctrineEntityGenerator\DoctrineEntityGeneratorBundle::class => ['all' => true],
+    Brokalia\DoctrineEntityGenerator\DoctrineEntityGeneratorBundle::class => ['dev' => true],
 ];
 ```
