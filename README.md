@@ -26,7 +26,9 @@ class MyDomainEntityId
         return $this->value;
     }
 }
+```
 
+```php
 // src/Domain/EntityId.php
 class SampleValueObject
 {
@@ -44,7 +46,9 @@ class SampleValueObject
         return $this->secondAttribute;
     }
 }
+```
 
+```php
 // src/Domain/MyDomainEntity.php
 class MyDomainEntity {
     public function __construct(
@@ -66,7 +70,54 @@ class MyDomainEntity {
 Creates a doctrine entity and a mapper between them.
 
 ```php
+// src/Infrastructure/Persistence/DoctrineMyDomainEntity.php
+class DoctrineMyDomainEntity
+{
+    #[ORM\Column(type: 'string')]
+    #[ORM\Id]
+    public string $id;
 
+    #[ORM\Column(type: 'string')]
+    public string $valueObject_firstAttribute;
+
+    #[ORM\Column(type: 'integer')]
+    public int $valueObject_secondAttribute;
+}
+```
+
+```php
+// src/Infrastructure/Persistence/DoctrineMyDomainEntityMapper.php
+class DoctrineMyDomainEntityMapper
+{
+    public static function fromDomain(
+        MyDomainEntity $domainEntity,
+        ?DoctrineMyDomainEntity $doctrineEntity,
+    ): DoctrineMyDomainEntity {
+        $doctrineEntity = $doctrineEntity ?? new DoctrineMyDomainEntity();
+
+        $doctrineEntity->id = $domainEntity->getId()->getValue();
+        $doctrineEntity->valueObject_firstAttribute = $domainEntity->getValueObject()->getFirstAttribute();
+        $doctrineEntity->valueObject_secondAttribute = $domainEntity->getValueObject()->getSecondAttribute();
+
+        return $doctrineEntity;
+    }
+
+    public static function toDomain(DoctrineMyDomainEntity $doctrineEntity): MyDomainEntity
+    {
+        $reflector = new ReflectionClass(MyDomainEntity::class);
+        $constructor = $reflector->getConstructor();
+        if (!$constructor) {
+            throw new RuntimeException('No constructor');
+        }
+        $object = $reflector->newInstanceWithoutConstructor();
+        $constructor->invoke(
+            $object,
+            new MyDomainEntityId($doctrineEntity->id),
+            new SampleValueObject($doctrineEntity->valueObject_firstAttribute, $doctrineEntity->valueObject_secondAttribute),
+        );
+        return $object;
+    }
+}
 ```
 
 Installation
