@@ -1,4 +1,0 @@
-services:
-  Brokalia\DoctrineEntityGenerator\\Command\:
-    resource: '../../src/Command/*'
-    tags: ['console.command']
