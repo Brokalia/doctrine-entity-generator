@@ -161,9 +161,7 @@ class MyDomainEntityRepository {
     public function save(MyDomainEntity $entity): void
     {
         // Get previous existent doctrine entity if exists for update cases
-        $existentDoctrineEntity = $this->entityManager
-            ->getRepository(DoctrineMyDomainEntity::class)
-            ->find($entity->getId()->getValue());
+        $existentDoctrineEntity = $this->findDoctrineEntity($entity->getId()->getValue());
             
         // Map domain entity to doctrine entity
         $doctrineEntity = $this->mapper->fromDomain(
@@ -179,9 +177,7 @@ class MyDomainEntityRepository {
     public function findById(MyDomainEntityId $id): ?MyDomainEntity 
     {
         // Get doctrine entity
-        $doctrineEntity = $this->entityManager
-            ->getRepository(DoctrineMyDomainEntity::class)
-            ->find($entity->getId()->getValue());
+        $doctrineEntity = $this->findDoctrineEntity($entity->getId()->getValue());
             
         if (!$doctrineEntity) {
             return null;
@@ -189,6 +185,13 @@ class MyDomainEntityRepository {
         
         // Return domain entity mapped
         return $this->mapper->toDomain($doctrineEntity);
+    }
+    
+    private function findDoctrineEntity(string $id): ?DoctrineMyDomainEntity
+    {
+        return $this->entityManager
+            ->getRepository(DoctrineMyDomainEntity::class)
+            ->find($entity->getId()->getValue());
     }
 }
 ```
