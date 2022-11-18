@@ -1,0 +1,23 @@
+{
+  "name": "brokalia/doctrine-entity-generator",
+  "description": "Generates a doctrine entity and mapper from domain entity",
+  "type": "symfony-bundle",
+  "require": {
+    "php": ">=8.1",
+    "symfony/framework-bundle": "^6.1",
+    "doctrine/orm": "^2.13",
+    "nette/php-generator": "^4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Brokalia\\DoctrineEntityGenerator\\": "src/"
+    }
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Chuano Puchol",
+      "email": "juanjo@brokalia.com"
+    }
+  ]
+}
