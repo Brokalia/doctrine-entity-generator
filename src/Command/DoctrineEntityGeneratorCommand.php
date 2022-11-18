@@ -28,7 +28,7 @@ class DoctrineEntityGeneratorCommand extends Command
 
     public function __construct()
     {
-        parent::__construct();
+        parent::__construct('doctrine-generator:entity');
         $this->addArgument('entity', InputArgument::REQUIRED, 'Domain entity with namespace');
         $this->setDescription('Generates a doctrine entity and a mapper from domain entity');
     }
