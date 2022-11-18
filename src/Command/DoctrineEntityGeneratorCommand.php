@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Brokalia\DoctrineEntityGenerator\Command;
 
 use Brokalia\DoctrineEntityGenerator\Model\EntityProperty;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
@@ -143,10 +142,15 @@ class DoctrineEntityGeneratorCommand extends Command
         ReflectionClass $domainEntityReflector
     ): void {
         $type = $property->getType()?->getName();
-        $doctrineEntity->addProperty($property->getName())
+
+        $p = $doctrineEntity->addProperty($property->getName())
             ->setType($type)
             ->setNullable($property->getType()?->allowsNull())
             ->addAttribute(Column::class, ['type' => $this->getDoctrineType($type)]);
+
+        if ($property->getName() === 'id') {
+            $p->addAttribute(Id::class);
+        }
 
         $this->entityProperties[] = new EntityProperty(
             $property->getName(),
