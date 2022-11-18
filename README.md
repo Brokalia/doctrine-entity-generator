@@ -10,7 +10,7 @@ Usage
 bin/console doctrine-generator:entity "App\Domain\MyDomainEntity"
 ```
 
-Results
+Example
 -------
 
 Given MyDomainEntity with some value objects:
