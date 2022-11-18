@@ -337,7 +337,6 @@ class DoctrineEntityGeneratorCommand extends Command
                 )->setNullable(),
             ])
             ->setReturnType($doctrineEntityNamespace . '\\' . $doctrineEntity->getName())
-            ->setStatic()
             ->setBody($body);
 
         return $valueObjectParameters;
@@ -388,7 +387,6 @@ class DoctrineEntityGeneratorCommand extends Command
                 ),
             ])
             ->setReturnType('\\' . $entityClassName)
-            ->setStatic()
             ->setBody($body);
     }
 

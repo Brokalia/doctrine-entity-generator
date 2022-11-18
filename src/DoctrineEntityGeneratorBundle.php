@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Brokalia\DoctrineEntityGenerator;
 
+use Brokalia\DoctrineEntityGenerator\CompilerPass\CommandRegistrationPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;

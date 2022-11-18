@@ -13,6 +13,8 @@ bin/console doctrine-generator:entity "App\Domain\MyDomainEntity"
 Results
 -------
 
+Given MyDomainEntity with some value objects:
+
 ```php
 // src/Domain/MyDomainEntityId.php
 class MyDomainEntityId
@@ -67,7 +69,7 @@ class MyDomainEntity {
     }
 }
 ```
-Creates a doctrine entity and a mapper between them.
+Generates a doctrine entity and a mapper to map between domain and doctrine entities:
 
 ```php
 // src/Infrastructure/Persistence/DoctrineMyDomainEntity.php
@@ -89,7 +91,7 @@ class DoctrineMyDomainEntity
 // src/Infrastructure/Persistence/DoctrineMyDomainEntityMapper.php
 class DoctrineMyDomainEntityMapper
 {
-    public static function fromDomain(
+    public function fromDomain(
         MyDomainEntity $domainEntity,
         ?DoctrineMyDomainEntity $doctrineEntity,
     ): DoctrineMyDomainEntity {
@@ -102,7 +104,7 @@ class DoctrineMyDomainEntityMapper
         return $doctrineEntity;
     }
 
-    public static function toDomain(DoctrineMyDomainEntity $doctrineEntity): MyDomainEntity
+    public function toDomain(DoctrineMyDomainEntity $doctrineEntity): MyDomainEntity
     {
         $reflector = new ReflectionClass(MyDomainEntity::class);
         $constructor = $reflector->getConstructor();
@@ -116,6 +118,50 @@ class DoctrineMyDomainEntityMapper
             new SampleValueObject($doctrineEntity->valueObject_firstAttribute, $doctrineEntity->valueObject_secondAttribute),
         );
         return $object;
+    }
+}
+```
+Now you can create a repository for the domain entity using doctrine to persist the entity with the mapper.
+
+```php
+class MyDomainEntityRepository {
+    public function __construct(
+        private EntityManagerInterface $entityManager, 
+        private DoctrineMyDomainEntityMapper $mapper,
+    ) {
+    }
+    
+    public function save(MyDomainEntity $entity): void
+    {
+        // Get previous existent doctrine entity if exists for update cases
+        $existentDoctrineEntity = $this->entityManager
+            ->getRepository(DoctrineMyDomainEntity::class)
+            ->find($entity->getId()->getValue());
+            
+        // Map domain entity to doctrine entity
+        $doctrineEntity = $this->mapper->fromDomain(
+            $entity, 
+            $existentDoctrineEntity ?? new DoctrineMyDomainEntity()
+        );
+        
+        // Persist
+        $this->entityManager->persist($doctrineEntity);
+        $this->entityManager->flush();
+    }
+    
+    public function findById(MyDomainEntityId $id): ?MyDomainEntity 
+    {
+        // Get doctrine entity
+        $doctrineEntity = $this->entityManager
+            ->getRepository(DoctrineMyDomainEntity::class)
+            ->find($entity->getId()->getValue());
+            
+        if (!$doctrineEntity) {
+            return null;
+        }
+        
+        // Return domain entity mapped
+        return $this->mapper->toDomain($doctrineEntity);
     }
 }
 ```

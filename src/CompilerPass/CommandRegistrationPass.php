@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Brokalia\DoctrineEntityGenerator;
+namespace Brokalia\DoctrineEntityGenerator\CompilerPass;
 
 use Brokalia\DoctrineEntityGenerator\Command\DoctrineEntityGeneratorCommand;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
