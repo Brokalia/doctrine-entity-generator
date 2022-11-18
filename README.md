@@ -56,7 +56,8 @@ class MyDomainEntity {
     public function __construct(
         private MyDomainEntityId $id,
         private SampleValueObject $valueObject,
-    ) {}
+    ) {
+    }
 
     public function getId(): MyDomainEntityId
     {

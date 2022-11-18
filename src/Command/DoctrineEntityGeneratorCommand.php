@@ -45,7 +45,7 @@ class DoctrineEntityGeneratorCommand extends Command
     {
         $entityClassName = $input->getArgument('entity');
         $doctrineEntity = $this->buildDoctrineEntity($entityClassName);
-        $this->createMapper($entityClassName, $doctrineEntity);
+        $this->buildMapper($entityClassName, $doctrineEntity);
 
         return 0;
     }
@@ -85,7 +85,7 @@ class DoctrineEntityGeneratorCommand extends Command
     /**
      * @throws ReflectionException
      */
-    private function createMapper(string $entityClassName, ClassType $doctrineEntity): void
+    private function buildMapper(string $entityClassName, ClassType $doctrineEntity): void
     {
         $reflector = new ReflectionClass($entityClassName);
         $doctrineEntityNamespace = $this->buildInfrastructureNamespace($reflector->getNamespaceName());
@@ -93,7 +93,6 @@ class DoctrineEntityGeneratorCommand extends Command
         $namespace = new PhpNamespace($doctrineEntityNamespace);
         $namespace->addUse($reflector->getName());
         $namespace->addUse($doctrineEntityNamespace . '\\' . $doctrineEntity->getName());
-        $namespace->addUse(EntityManagerInterface::class);
         $namespace->addUse(ReflectionClass::class);
         $namespace->addUse(RuntimeException::class);
 
@@ -106,10 +105,6 @@ class DoctrineEntityGeneratorCommand extends Command
         }
 
         $mapper = $namespace->addClass('Doctrine' . $reflector->getShortName() . 'Mapper');
-        $mapper->addProperty('entityManager')->setType(EntityManagerInterface::class)->setPrivate()->setReadOnly();
-        $mapper->addMethod('__construct')->setParameters([
-            (new Parameter('entityManager'))->setType(EntityManagerInterface::class),
-        ])->setBody('$this->entityManager = $entityManager;');
 
         $valueObjectMapping = $this->generateFromDomain(
             $doctrineEntity,
