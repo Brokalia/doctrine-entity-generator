@@ -16,41 +16,6 @@ Example
 Given MyDomainEntity with some value objects:
 
 ```php
-// src/Domain/MyDomainEntityId.php
-class MyDomainEntityId
-{
-    public function __construct(private string $value)
-    {
-    }
-
-    public function getValue(): string
-    {
-        return $this->value;
-    }
-}
-```
-
-```php
-// src/Domain/EntityId.php
-class SampleValueObject
-{
-    public function __construct(private string $firstAttribute, private int $secondAttribute)
-    {
-    }
-
-    public function getFirstAttribute(): string
-    {
-        return $this->firstAttribute;
-    }
-
-    public function getSecondAttribute(): int
-    {
-        return $this->secondAttribute;
-    }
-}
-```
-
-```php
 // src/Domain/MyDomainEntity.php
 class MyDomainEntity {
     public function __construct(
@@ -70,6 +35,44 @@ class MyDomainEntity {
     }
 }
 ```
+
+```php
+// src/Domain/MyDomainEntityId.php
+class MyDomainEntityId
+{
+    public function __construct(private string $value)
+    {
+    }
+
+    public function getValue(): string
+    {
+        return $this->value;
+    }
+}
+```
+
+```php
+// src/Domain/EntityId.php
+class SampleValueObject
+{
+    public function __construct(
+        private string $firstAttribute, 
+        private int $secondAttribute
+    ) {
+    }
+
+    public function getFirstAttribute(): string
+    {
+        return $this->firstAttribute;
+    }
+
+    public function getSecondAttribute(): int
+    {
+        return $this->secondAttribute;
+    }
+}
+```
+
 Generates a doctrine entity and a mapper to map between domain and doctrine entities:
 
 ```php
@@ -116,7 +119,10 @@ class DoctrineMyDomainEntityMapper
         $constructor->invoke(
             $object,
             new MyDomainEntityId($doctrineEntity->id),
-            new SampleValueObject($doctrineEntity->valueObject_firstAttribute, $doctrineEntity->valueObject_secondAttribute),
+            new SampleValueObject(
+                $doctrineEntity->valueObject_firstAttribute, 
+                $doctrineEntity->valueObject_secondAttribute
+            ),
         );
         return $object;
     }
