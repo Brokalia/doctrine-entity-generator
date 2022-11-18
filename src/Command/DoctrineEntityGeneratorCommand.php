@@ -17,16 +17,11 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionProperty;
 use RuntimeException;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(
-    name: 'doctrine-generator:entity',
-    description: 'Generates a doctrine entity and a mapper from domain entity'
-)]
 class DoctrineEntityGeneratorCommand extends Command
 {
     private array $entityProperties = [];
@@ -35,6 +30,7 @@ class DoctrineEntityGeneratorCommand extends Command
     {
         parent::__construct();
         $this->addArgument('entity', InputArgument::REQUIRED, 'Domain entity with namespace');
+        $this->setDescription('Generates a doctrine entity and a mapper from domain entity');
     }
 
     /**
