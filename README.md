@@ -177,7 +177,7 @@ class MyDomainEntityRepository {
     public function findById(MyDomainEntityId $id): ?MyDomainEntity 
     {
         // Get doctrine entity
-        $doctrineEntity = $this->findDoctrineEntity($entity->getId()->getValue());
+        $doctrineEntity = $this->findDoctrineEntity($id->getValue());
             
         if (!$doctrineEntity) {
             return null;
@@ -189,9 +189,7 @@ class MyDomainEntityRepository {
     
     private function findDoctrineEntity(string $id): ?DoctrineMyDomainEntity
     {
-        return $this->entityManager
-            ->getRepository(DoctrineMyDomainEntity::class)
-            ->find($entity->getId()->getValue());
+        return $this->entityManager->getRepository(DoctrineMyDomainEntity::class)->find($id);
     }
 }
 ```
